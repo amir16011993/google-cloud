@@ -33,11 +33,11 @@ def bigtable_read_data(request):
 
     #2-read data from existing bigTable
     """
-    def readbigTable(project_id,instance_id, table_id,request):
-        client = bigtable.Client(project=project_id, admin=True)
-        instance=client.instance(instance_id)
+    def readbigTable(request):
+        client = bigtable.Client(project=request.headers.get("project_id"), admin=True)
+        instance = client.instance(request.headers.get("instance_id"))
+        table = instance.table(request.headers.get("table_id"))
         row_filter= row_filters.CellsColumnLimitFilter(1)
-        table = instance.table(table_id)
         print("Scanning for all greetings:")
         partial_rows= table.read_rows(filter_=row_filter)
 
@@ -49,11 +49,11 @@ def bigtable_read_data(request):
     
     #3-write data to existing bigTable with dataflow
     """
-    def writeTobigTable(element, project_id,instance_id, table_id,request):
+    def writeTobigTable(element,request):
+        client = bigtable.Client(project=request.headers.get("project_id"), admin=True)
+        instance = client.instance(request.headers.get("instance_id"))
+        table = instance.table(request.headers.get("table_id"))
         row_key, value = element.split(',')
-        client = bigtable.Client(project=self.project_id, admin=True)
-        instance = self.client.instance(self.instance_id)
-        table = self.instance.table(self.table_id)
         column_family_id = 'cf1'
         column_id = 'column1'.encode()
         row = self.table.row(row_key)
@@ -61,4 +61,6 @@ def bigtable_read_data(request):
         row.commit()"""
 
 
+#gcloud functions deploy bigtable_read_data \ --runtime python310 --trigger-http
 
+#curl "https://REGION-PROJECT_ID.cloudfunctions.net/bigtable_read_data" -H "instance_id: test-instance" -H "table_id: test-table"
