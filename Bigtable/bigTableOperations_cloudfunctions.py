@@ -33,7 +33,7 @@ def bigtable_read_data(request):
 
     #2-read data from existing bigTable
     """
-    def readbigTable(project_id,instance_id, table_id):
+    def readbigTable(project_id,instance_id, table_id,request):
         client = bigtable.Client(project=project_id, admin=True)
         instance=client.instance(instance_id)
         row_filter= row_filters.CellsColumnLimitFilter(1)
@@ -49,7 +49,7 @@ def bigtable_read_data(request):
     
     #3-write data to existing bigTable with dataflow
     """
-    def writeTobigTable(element, project_id,instance_id, table_id):
+    def writeTobigTable(element, project_id,instance_id, table_id,request):
         row_key, value = element.split(',')
         client = bigtable.Client(project=self.project_id, admin=True)
         instance = self.client.instance(self.instance_id)
