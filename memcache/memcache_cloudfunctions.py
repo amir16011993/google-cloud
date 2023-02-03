@@ -9,3 +9,7 @@ def bigtable_read_data(request):
     # Retrieve the value of a key
     value = client.get("my-key")
     print(value)
+
+#gcloud functions deploy bigtable_read_data \ --runtime python310 --trigger-http
+
+#curl "https://REGION-PROJECT_ID.cloudfunctions.net/bigtable_read_data" -H "instance_id: test-instance" -H "table_id: test-table"
