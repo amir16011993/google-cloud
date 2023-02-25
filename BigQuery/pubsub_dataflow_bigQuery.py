@@ -29,12 +29,6 @@ class MyOptions(PipelineOptions):
             default='sub1')
 
 class PubSubToBigQuery(beam.DoFn):
-
-    def __init__(self, project_id, dataset_id, table_id):
-        self.project_id = "my-kubernetes-codelab-370814"
-        self.dataset_id = "Bigquery_dataset"
-        self.table_id = "data"
-        self.client = None
     
     def process(self, element):
         # Apply some custom processing to the element
@@ -55,7 +49,8 @@ def run(argv=None):
 
     pipeline_options = PipelineOptions(flags=argv)
     with beam.Pipeline(options=pipeline_options) as p:
-        (p | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(topic=topic_name) | 'Transform' >> beam.ParDo(PubSubToBigQuery()) |  'Write to BigQuery' >> WriteToBigQuery(table=''+str(project_id)+':'+str(dataset_id)+'.'+str(table_id), schema='field1:STRING, field2:INTEGER, field3:FLOAT' , create_disposition='CREATE_IF_NEEDED', write_disposition='WRITE_APPEND'))
+        (p | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(topic=topic_name) | 'Transform' >> beam.ParDo(PubSubToBigQuery()) |  'Write to BigQuery' >> WriteToBigQuery(table=''+str(project_id)+':'+str(dataset_id)+'.'+str(table_id), schema='field1:STRING, field2:INTEGER, field3:FLOAT' , 
+        create_disposition='CREATE_IF_NEEDED', write_disposition='WRITE_APPEND'))
 
     #client, dataset and table  defining
     client = bigquery.Client()
