@@ -55,7 +55,7 @@ def run(argv=None):
 
     pipeline_options = PipelineOptions(flags=argv)
     with beam.Pipeline(options=pipeline_options) as p:
-        (p | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(topic=topic_name) | 'Transform' >> beam.ParDo(PubSubToBigQuery()) |  'Write to BigQuery' >> WriteToBigQuery(table=''+str(project_id)+':'+str(dataset_id)+'.'+str(table_id), schema='field1:STRING, field2:INTEGER, field3:FLOAT' , create_disposition='CREATE_IF_NEEDED', write_disposition='WRITE_APPEND')))
+        (p | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(topic=topic_name) | 'Transform' >> beam.ParDo(PubSubToBigQuery()) |  'Write to BigQuery' >> WriteToBigQuery(table=''+str(project_id)+':'+str(dataset_id)+'.'+str(table_id), schema='field1:STRING, field2:INTEGER, field3:FLOAT' , create_disposition='CREATE_IF_NEEDED', write_disposition='WRITE_APPEND'))
 
     #client, dataset and table  defining
     client = bigquery.Client()
