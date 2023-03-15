@@ -1,0 +1,32 @@
+# Import necessary libraries
+from pyspark.sql import SparkSession
+from google.cloud import storage
+
+# Set up a SparkSession
+spark = SparkSession.builder.appName("PySpark_GCP_Input").getOrCreate()
+
+# Set up a client for Google Cloud Storage
+client = storage.Client()
+
+# Set up the bucket and file path for the input data
+bucket_name = "your_bucket_name"
+file_path = "path/to/your/input_file.csv"
+
+# Use the client to access the bucket and get the input file as a blob
+bucket = client.bucket(bucket_name)
+blob = bucket.blob(file_path)
+
+# Download the input file to a local directory
+blob.download_to_filename("local_input_file.csv")
+
+# Use Spark to read the input data from the local file
+df = spark.read.format("csv").option("header", "true").load("local_input_file.csv")
+
+# Do some processing on the input data using PySpark
+processed_df = df.filter(df["column_name"] > 0)
+
+# Output the processed data to a new file in Google Cloud Storage
+output_path = "path/to/your/output_file.csv"
+processed_df.write.format("csv").option("header", "true").save(f"gs://{bucket_name}/{output_path}")
+
+This script assumes that you have already set up a Google Cloud Storage bucket and have the necessary credentials set up to access it. You will need to replace "your_bucket_name" and the file paths with the actual names of your bucket and input/output file
