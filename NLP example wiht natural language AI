@@ -1,0 +1,22 @@
+import os
+from google.cloud import language_v1
+from google.cloud.language_v1 import enums
+
+# set environment variable to authenticate with Google Cloud
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "path/to/service/account/key.json"
+
+# create client object
+client = language_v1.LanguageServiceClient()
+
+# the text to analyze
+text = "I love spending time with my friends and family. They always make me happy!"
+
+# create document object
+document = language_v1.Document(content=text, type_=enums.Document.Type.PLAIN_TEXT)
+
+# analyze sentiment
+response = client.analyze_sentiment(document=document, encoding_type=enums.EncodingType.UTF8)
+
+# print sentiment score and magnitude
+print("Sentiment score:", response.document_sentiment.score)
+print("Sentiment magnitude:", response.document_sentiment.magnitude)
